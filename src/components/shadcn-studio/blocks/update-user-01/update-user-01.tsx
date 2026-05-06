@@ -63,16 +63,15 @@ const UpdateUserModal = ({ onClose }: Props) => {
         )
       }
 
-      const payload: Record<string, string> = {}
-      if (firstName !== user.firstName) payload.firstName = firstName
-      if (lastName !== user.lastName) payload.lastName = lastName
+      const payload: Record<string, string> = {
+        firstName,
+        lastName,
+      }
       if (password) {
         payload.password = password
         payload.password_confirmation = passwordConfirm
       }
-      if (Object.keys(payload).length > 0) {
-        calls.push(UsersService.update(user.id, payload))
-      }
+      calls.push(UsersService.update(user.id, payload))
 
       await Promise.all(calls)
 

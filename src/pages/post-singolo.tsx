@@ -176,7 +176,7 @@ const EditPostModal = ({ post, onClose, onUpdated }: EditPostModalProps) => {
               placeholder="Racconta la tua esperienza…"
               required
               rows={4}
-              className="w-full rounded-md border border-input bg-white px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
             />
           </div>
 
