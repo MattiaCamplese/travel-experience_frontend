@@ -3,8 +3,9 @@ import type { SocialPost } from "@/features/posts/posts.type"
 export type UpdateUserPayload = {
     firstName?: string
     lastName?: string
+    currentPassword?: string
     password?: string
-    password_confirmation?: string
+    passwordConfirmation?: string
 }
 
 export type User = {

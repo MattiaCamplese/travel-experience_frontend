@@ -73,9 +73,9 @@ const UpdateUserModal = ({ onClose }: Props) => {
         lastName,
       }
       if (password) {
-        payload.current_password = currentPassword
+        payload.currentPassword = currentPassword
         payload.password = password
-        payload.password_confirmation = passwordConfirm
+        payload.passwordConfirmation = passwordConfirm
       }
       calls.push(UsersService.update(user.id, payload))
 
