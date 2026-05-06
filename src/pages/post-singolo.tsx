@@ -115,7 +115,6 @@ const EditPostModal = ({ post, onClose, onUpdated }: EditPostModalProps) => {
   return createPortal(
     <div
       className="fixed inset-0 z-60 flex items-center justify-center bg-black/75 backdrop-blur-sm px-4"
-      onClick={onClose}
     >
       <div
         className="relative w-full max-w-lg rounded-2xl bg-white shadow-2xl overflow-hidden"
@@ -155,17 +154,17 @@ const EditPostModal = ({ post, onClose, onUpdated }: EditPostModalProps) => {
           <div className="grid grid-cols-2 gap-3 text-black">
             <div className="space-y-1.5">
               <Label htmlFor="edit-location">Città</Label>
-              <Input id="edit-location" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="es. Tokyo" required />
+              <Input id="edit-location" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="es. Tokyo" required className="border border-gray-300" />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="edit-country">Paese</Label>
-              <Input id="edit-country" value={country} onChange={(e) => setCountry(e.target.value)} placeholder="es. Giappone" required />
+              <Input id="edit-country" value={country} onChange={(e) => setCountry(e.target.value)} placeholder="es. Giappone" required className="border border-gray-300" />
             </div>
           </div>
 
           <div className="space-y-1.5 text-black">
             <Label htmlFor="edit-title">Titolo</Label>
-            <Input id="edit-title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Il tuo titolo…" required />
+            <Input id="edit-title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Il tuo titolo…" required className="border border-gray-300" />
           </div>
 
           <div className="space-y-1.5 text-black">
