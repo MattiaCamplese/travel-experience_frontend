@@ -17,6 +17,7 @@ const UpdateUserModal = ({ onClose }: Props) => {
   const { user, updateUser } = useAuthStore()
   const [firstName, setFirstName] = useState(user?.firstName ?? "")
   const [lastName, setLastName] = useState(user?.lastName ?? "")
+  const [currentPassword, setCurrentPassword] = useState("")
   const [password, setPassword] = useState("")
   const [passwordConfirm, setPasswordConfirm] = useState("")
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
@@ -49,6 +50,10 @@ const UpdateUserModal = ({ onClose }: Props) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!user) return
+    if (password && !currentPassword) {
+      toast.error("Inserisci la password attuale per cambiarla.")
+      return
+    }
     if (password && password !== passwordConfirm) {
       toast.error("Le password non coincidono.")
       return
@@ -68,6 +73,7 @@ const UpdateUserModal = ({ onClose }: Props) => {
         lastName,
       }
       if (password) {
+        payload.current_password = currentPassword
         payload.password = password
         payload.password_confirmation = passwordConfirm
       }
@@ -150,6 +156,19 @@ const UpdateUserModal = ({ onClose }: Props) => {
                 className="border-gray-300"
               />
             </div>
+          </div>
+
+          {/* Password attuale */}
+          <div className="space-y-1.5 text-black">
+            <Label htmlFor="currentPassword">Password attuale</Label>
+            <Input
+              id="currentPassword"
+              type="password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              placeholder="Richiesta solo se vuoi cambiarla"
+              className="border-gray-300"
+            />
           </div>
 
           {/* Password / Conferma */}
