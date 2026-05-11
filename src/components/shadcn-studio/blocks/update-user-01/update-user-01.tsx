@@ -26,7 +26,7 @@ const UpdateUserModal = ({ onClose }: Props) => {
   const fileRef = useRef<HTMLInputElement>(null)
 
   const initials = `${user?.firstName?.[0] ?? ""}${user?.lastName?.[0] ?? ""}`.toUpperCase()
-  const defaultAvatar = `https://api.dicebear.com/9.x/rings/svg?seed=${encodeURIComponent(user?.email ?? "")}`
+  const defaultAvatar = user?.avatarUrl ?? `https://api.dicebear.com/9.x/rings/svg?seed=${encodeURIComponent(user?.email ?? "")}`
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose()
@@ -60,14 +60,6 @@ const UpdateUserModal = ({ onClose }: Props) => {
     }
     setLoading(true)
     try {
-      const calls: Promise<unknown>[] = []
-
-      if (avatarFile) {
-        calls.push(
-          UsersService.updateAvatar(user.id, avatarFile)
-        )
-      }
-
       const payload: Record<string, string> = {
         firstName,
         lastName,
@@ -77,11 +69,17 @@ const UpdateUserModal = ({ onClose }: Props) => {
         payload.password = password
         payload.passwordConfirmation = passwordConfirm
       }
-      calls.push(UsersService.update(user.id, payload))
 
-      await Promise.all(calls)
+      const [newAvatarUrl] = await Promise.all([
+        avatarFile ? UsersService.updateAvatar(user.id, avatarFile) : Promise.resolve(undefined),
+        UsersService.update(user.id, payload),
+      ])
 
-      updateUser({ firstName, lastName })
+      updateUser({
+        firstName,
+        lastName,
+        ...(newAvatarUrl !== undefined ? { avatarUrl: newAvatarUrl } : {}),
+      })
       toast.success("Profilo aggiornato!")
       onClose()
     } catch {

@@ -41,7 +41,7 @@ const CommentItem = ({ comment: c }: { comment: Comment }) => {
   return (
     <div className="flex gap-3 text-sm">
       <Avatar className="h-7 w-7 shrink-0">
-        <AvatarImage src={`https://api.dicebear.com/9.x/rings/svg?seed=${encodeURIComponent(`${c.firstName}-${c.lastName}`)}`} />
+        <AvatarImage src={c.avatarUrl ?? `https://api.dicebear.com/9.x/rings/svg?seed=${encodeURIComponent(`${c.firstName}-${c.lastName}`)}`} />
         <AvatarFallback className="bg-pink-100 text-[10px] font-bold text-pink-600 uppercase">{c.firstName[0]}</AvatarFallback>
       </Avatar>
       <div className="flex-1 leading-snug pt-0.5">
@@ -257,7 +257,7 @@ const PostSingolo = ({
     setSending(true)
     try {
       await CommentsService.store({ user_id: user.id, post_id: post.id, comment: text })
-      setComments((prev) => [...prev, { id: "", comment: text, firstName: user.firstName, lastName: user.lastName, likes: 0, userLikeId: null }])
+      setComments((prev) => [...prev, { id: "", comment: text, firstName: user.firstName, lastName: user.lastName, avatarUrl: user.avatarUrl, likes: 0, userLikeId: null }])
       setNewComment("")
       inputRef.current?.focus()
     } catch {

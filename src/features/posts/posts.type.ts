@@ -3,6 +3,7 @@ export type Comment = {
     comment: string
     firstName: string
     lastName: string
+    avatarUrl: string | null
     likes: number
     userLikeId: number | null
 }
