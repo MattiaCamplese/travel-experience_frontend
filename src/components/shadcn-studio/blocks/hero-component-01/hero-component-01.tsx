@@ -52,7 +52,7 @@ const Header = ({ navigationData }: HeaderProps) => {
               <DropdownMenuTrigger className='cursor-pointer'>
                 <div className="flex items-center gap-2">
                   <Avatar className="bg-white border-2 border-white text-sm font-medium font-[Inter]">
-                    <AvatarImage src={user.avatarUrl ?? `https://api.dicebear.com/9.x/rings/svg?seed=${user.email}`} />
+                    <AvatarImage src={user.avatarUrl || `https://api.dicebear.com/9.x/rings/svg?seed=${user.email}`} />
                   </Avatar>
                   <span className="text-base font-medium text-gray-800">
                     {user.firstName} {user.lastName}

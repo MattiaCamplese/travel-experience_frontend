@@ -23,9 +23,10 @@ const CommentItem = ({ comment: c }: { comment: Comment }) => {
   const [likeCount, setLikeCount] = useState(c.likes)
 
   const isCurrentUser = user?.id === c.userId
+  const dicebearSeed = `https://api.dicebear.com/9.x/rings/svg?seed=${encodeURIComponent(`${c.firstName}-${c.lastName}`)}`
   const avatarSrc = isCurrentUser
-    ? (user.avatarUrl ?? `https://api.dicebear.com/9.x/rings/svg?seed=${encodeURIComponent(`${c.firstName}-${c.lastName}`)}`)
-    : (c.avatarUrl ?? `https://api.dicebear.com/9.x/rings/svg?seed=${encodeURIComponent(`${c.firstName}-${c.lastName}`)}`)
+    ? (user.avatarUrl || dicebearSeed)
+    : (c.avatarUrl || dicebearSeed)
 
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -312,7 +313,7 @@ const PostSingolo = ({
             {/* Author header — sempre visibile */}
             <div className="flex items-center gap-4 px-6 py-5 border-b border-gray-100 shrink-0">
               <Avatar className="h-12 w-12 shrink-0">
-                <AvatarImage src={post.author.avatarUrl ?? `https://api.dicebear.com/9.x/rings/svg?seed=${encodeURIComponent(post.author.email)}`} />
+                <AvatarImage src={post.author.avatarUrl || `https://api.dicebear.com/9.x/rings/svg?seed=${encodeURIComponent(post.author.email)}`} />
                 <AvatarFallback className="bg-pink-200 text-lg font-bold text-pink-700 uppercase">{initials}</AvatarFallback>
               </Avatar>
               <div className="leading-snug">

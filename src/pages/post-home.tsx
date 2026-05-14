@@ -123,7 +123,7 @@ const PostPage = ({ post }: { post: SocialPost }) => {
         <div className="flex flex-col gap-3 p-4">
           <div className="flex items-center gap-2.5">
             <Avatar className="h-8 w-8 shrink-0">
-              <AvatarImage src={post.author.avatarUrl ?? `https://api.dicebear.com/9.x/rings/svg?seed=${encodeURIComponent(post.author.email)}`} />
+              <AvatarImage src={post.author.avatarUrl || `https://api.dicebear.com/9.x/rings/svg?seed=${encodeURIComponent(post.author.email)}`} />
               <AvatarFallback className="bg-pink-200 text-xs font-bold text-pink-700 uppercase">{initials}</AvatarFallback>
             </Avatar>
             <div className="leading-tight">
