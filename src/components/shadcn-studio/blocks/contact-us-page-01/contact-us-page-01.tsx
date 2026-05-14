@@ -1,5 +1,4 @@
 import type { ComponentType } from 'react'
-
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
@@ -11,7 +10,7 @@ type ContactInfo = {
 
 const ContactUs = ({ contactInfo }: { contactInfo: ContactInfo }) => {
   return (
-    <section className='py-8 sm:py-16 lg:py-24'>
+    <section className='w-full py-8 sm:py-16 lg:py-24'>
       <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         {/* Header */}
         <div className='mx-auto mb-8 w-fit sm:mb-12'>

@@ -20,7 +20,7 @@ const navigationData = [
 
 const WebSiteLayout = () => {
     return (
-        <div className="flex min-h-screen flex-col">
+        <div className="flex min-h-dvh w-full flex-col">
             <Header navigationData={navigationData} />
             <main className="flex-1">
                 <Outlet />
