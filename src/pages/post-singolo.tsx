@@ -279,7 +279,7 @@ const PostSingolo = ({
   return createPortal(
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm" onClick={onClose}>
-        <div className="relative flex w-[93vw] h-[86vh] rounded-2xl overflow-hidden bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <div className="relative flex w-[92vw] max-w-4xl h-[80vh] max-h-170 rounded-2xl overflow-hidden bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
 
           {/* Edit button — solo per l'autore */}
           {isAuthor && (
