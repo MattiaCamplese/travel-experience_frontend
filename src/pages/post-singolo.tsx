@@ -22,8 +22,10 @@ const CommentItem = ({ comment: c }: { comment: Comment }) => {
   const [likeId, setLikeId] = useState<number | null>(c.userLikeId)
   const [likeCount, setLikeCount] = useState(c.likes)
 
-  const isCurrentUser = user?.id === c.userId
   const dicebearSeed = `https://api.dicebear.com/9.x/rings/svg?seed=${encodeURIComponent(`${c.firstName}-${c.lastName}`)}`
+  const isCurrentUser = user != null && (
+    c.userId ? user.id === c.userId : user.firstName === c.firstName && user.lastName === c.lastName
+  )
   const avatarSrc = isCurrentUser
     ? (user.avatarUrl || dicebearSeed)
     : (c.avatarUrl || dicebearSeed)
