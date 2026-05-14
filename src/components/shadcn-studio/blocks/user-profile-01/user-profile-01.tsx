@@ -173,7 +173,7 @@ const UserProfile = ({
           <button
             onClick={() => setCreateOpen(true)}
             style={{ bottom: btnBottom }}
-            className="fixed right-8 z-60 flex items-center gap-2 rounded-full bg-pink-500 px-5 py-3 text-sm font-semibold text-white shadow-lg hover:bg-pink-600 active:scale-95 transition-all duration-200"
+            className="fixed right-8 z-40 flex items-center gap-2 rounded-full bg-pink-500 px-5 py-3 text-sm font-semibold text-white shadow-lg hover:bg-pink-600 active:scale-95 transition-all duration-200"
           >
             <PenLine className="size-4" />
             Crea post
