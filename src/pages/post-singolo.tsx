@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
-import { Heart, MapPin, Compass, X, Send, CogIcon, ImagePlus, Loader2 } from "lucide-react"
+import { Heart, MapPin, Compass, X, Send, CogIcon, ImagePlus, Loader2, MessageCircle, ChevronLeft } from "lucide-react"
 import { Link } from "react-router"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -226,6 +226,7 @@ const PostSingolo = ({
   const [newComment, setNewComment] = useState("")
   const [sending, setSending] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
+  const [showComments, setShowComments] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const isAuthor = user?.id === post.author.id
@@ -305,12 +306,12 @@ const PostSingolo = ({
             )}
           </div>
 
-          {/* Right – contenuto scrollabile */}
+          {/* Right – contenuto */}
           <div className="flex flex-col w-full md:w-2/5 h-full overflow-hidden bg-white">
 
-            {/* Author header — grande */}
-            <div className="flex items-center gap-4 px-6 py-6 border-b border-gray-100 shrink-0">
-              <Avatar className="h-14 w-14 shrink-0">
+            {/* Author header — sempre visibile */}
+            <div className="flex items-center gap-4 px-6 py-5 border-b border-gray-100 shrink-0">
+              <Avatar className="h-12 w-12 shrink-0">
                 <AvatarImage src={post.author.avatarUrl ?? `https://api.dicebear.com/9.x/rings/svg?seed=${encodeURIComponent(post.author.email)}`} />
                 <AvatarFallback className="bg-pink-200 text-lg font-bold text-pink-700 uppercase">{initials}</AvatarFallback>
               </Avatar>
@@ -322,78 +323,153 @@ const PostSingolo = ({
                 ) : (
                   <p className="text-base font-bold text-gray-800">{authorName}</p>
                 )}
-                <div className="flex items-center gap-1 text-xs text-gray-800 mt-0.5">
-                  <MapPin className="size-3.5" />
+                <div className="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
+                  <MapPin className="size-3" />
                   <span>{post.location}, {post.country}</span>
                 </div>
-                <p className="text-[11px] text-gray-800 uppercase tracking-wide mt-1">
-                  {new Date(post.createdAt).toLocaleDateString("it-IT")}
-                </p>
               </div>
             </div>
 
-            {/* Mobile image */}
-            {post.img && (
-              <div className="md:hidden w-full aspect-4/3 shrink-0 overflow-hidden">
-                <img src={post.img} alt={post.title} className="w-full h-full object-cover" />
+            {/* ── MOBILE: vista post (immagine + dettagli) ── */}
+            {!showComments && (
+              <div className="md:hidden flex flex-col flex-1 overflow-hidden">
+                {post.img && (
+                  <div className="w-full aspect-4/3 shrink-0 overflow-hidden">
+                    <img src={post.img} alt={post.title} className="w-full h-full object-cover" />
+                  </div>
+                )}
+                <div className="flex-1 overflow-y-auto px-5 py-4 space-y-2">
+                  <h2 className="font-bold text-gray-900 text-base leading-snug">{post.title}</h2>
+                  <p className="text-sm text-gray-600 leading-relaxed">{post.description}</p>
+                </div>
+                <div className="shrink-0 border-t border-gray-100 px-5 py-4 flex items-center justify-between bg-white">
+                  <button
+                    onClick={handleLike}
+                    className={`flex items-center gap-1.5 transition-all active:scale-90 ${liked ? "text-red-500" : "text-gray-700 hover:text-red-400"}`}
+                  >
+                    <Heart className={`size-5 ${liked ? "fill-red-500" : ""}`} />
+                    <span className="text-sm font-semibold">{likeCount.toLocaleString()}</span>
+                  </button>
+                  <button
+                    onClick={() => setShowComments(true)}
+                    className="flex items-center gap-1.5 text-gray-500 hover:text-gray-800 transition-colors"
+                  >
+                    <MessageCircle className="size-5" />
+                    <span className="text-sm font-medium">{comments.length} commenti</span>
+                  </button>
+                </div>
               </div>
             )}
 
-            {/* Title + description */}
-            <div className="px-6 py-5 border-b border-gray-100 shrink-0 space-y-2">
-              <h2 className="font-bold text-gray-900 text-lg leading-snug">{post.title}</h2>
-              <p className="text-sm text-gray-700 leading-relaxed">{post.description}</p>
-            </div>
-
-            {/* Commenti scrollabili */}
-            <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
-              {comments.length === 0 ? (
-                <p className="text-xs text-gray-400">Nessun commento ancora. Sii il primo!</p>
-              ) : (
-                comments.map((c, i) => (
-                  <CommentItem key={`${c.firstName}-${c.lastName}-${i}`} comment={c} />
-                ))
-              )}
-            </div>
-
-            {/* Like + input commento — grande, fondo */}
-            <div className="shrink-0 border-t border-gray-100 px-6 py-5 space-y-4 bg-white">
-              <div className="flex items-center gap-2">
+            {/* ── MOBILE: vista commenti ── */}
+            {showComments && (
+              <div className="md:hidden flex flex-col flex-1 overflow-hidden">
                 <button
-                  onClick={handleLike}
-                  className={`flex items-center gap-2 transition-all duration-200 active:scale-90 ${liked ? "text-red-500" : "text-black hover:text-red-400"}`}
+                  onClick={() => setShowComments(false)}
+                  className="shrink-0 flex items-center gap-1 px-4 py-3 border-b border-gray-100 text-sm text-gray-500 hover:text-gray-800 transition-colors"
                 >
-                  <Heart className={`size-6 ${liked ? "fill-red-500" : ""}`} />
+                  <ChevronLeft className="size-4" />
+                  Torna al post
                 </button>
-                <span className="text-sm font-semibold text-gray-700">{likeCount.toLocaleString()} mi piace</span>
+                <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
+                  {comments.length === 0 ? (
+                    <p className="text-xs text-gray-400">Nessun commento ancora. Sii il primo!</p>
+                  ) : (
+                    comments.map((c, i) => (
+                      <CommentItem key={`${c.firstName}-${c.lastName}-${i}`} comment={c} />
+                    ))
+                  )}
+                </div>
+                <div className="shrink-0 border-t border-gray-100 px-5 py-4 space-y-3 bg-white">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={handleLike}
+                      className={`flex items-center gap-1.5 transition-all active:scale-90 ${liked ? "text-red-500" : "text-gray-700 hover:text-red-400"}`}
+                    >
+                      <Heart className={`size-5 ${liked ? "fill-red-500" : ""}`} />
+                    </button>
+                    <span className="text-sm font-semibold text-gray-700">{likeCount.toLocaleString()} mi piace</span>
+                  </div>
+                  {user ? (
+                    <div className="flex items-center gap-2">
+                      <Input
+                        ref={inputRef}
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                        placeholder="Aggiungi un commento…"
+                        className="h-9 bg-gray-50 border-gray-200 text-gray-800"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleSend}
+                        disabled={!newComment.trim() || sending}
+                        className="text-pink-500 hover:text-pink-700 disabled:opacity-30 transition-colors"
+                      >
+                        <Send className="size-5" />
+                      </button>
+                    </div>
+                  ) : (
+                    <p className="text-xs text-gray-500 text-center">
+                      <a href="/login" className="text-pink-500 hover:underline font-semibold">Accedi</a> per commentare.
+                    </p>
+                  )}
+                </div>
               </div>
+            )}
 
-              {user ? (
+            {/* ── DESKTOP: title + description + commenti + footer ── */}
+            <div className="hidden md:flex flex-col flex-1 overflow-hidden">
+              <div className="px-6 py-5 border-b border-gray-100 shrink-0 space-y-2">
+                <h2 className="font-bold text-gray-900 text-lg leading-snug">{post.title}</h2>
+                <p className="text-sm text-gray-700 leading-relaxed">{post.description}</p>
+              </div>
+              <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+                {comments.length === 0 ? (
+                  <p className="text-xs text-gray-400">Nessun commento ancora. Sii il primo!</p>
+                ) : (
+                  comments.map((c, i) => (
+                    <CommentItem key={`${c.firstName}-${c.lastName}-${i}`} comment={c} />
+                  ))
+                )}
+              </div>
+              <div className="shrink-0 border-t border-gray-100 px-6 py-5 space-y-4 bg-white">
                 <div className="flex items-center gap-2">
-                  <Input
-                    ref={inputRef}
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                    placeholder="Aggiungi un commento…"
-                    className="h-10 bg-gray-50 border-gray-200 text-gray-800"
-                  />
                   <button
-                    type="button"
-                    onClick={handleSend}
-                    disabled={!newComment.trim() || sending}
-                    className="text-pink-500 hover:text-pink-700 disabled:opacity-30 transition-colors"
+                    onClick={handleLike}
+                    className={`flex items-center gap-2 transition-all duration-200 active:scale-90 ${liked ? "text-red-500" : "text-black hover:text-red-400"}`}
                   >
-                    <Send className="size-6" />
+                    <Heart className={`size-6 ${liked ? "fill-red-500" : ""}`} />
                   </button>
+                  <span className="text-sm font-semibold text-gray-700">{likeCount.toLocaleString()} mi piace</span>
                 </div>
-              ) : (
-                <div className="rounded-xl bg-pink-50 border border-pink-100 px-4 py-4 text-center">
-                  <p className="text-sm text-gray-600">
-                    <a href="/login" className="text-pink-500 hover:underline font-semibold">Accedi</a> per lasciare un commento o mettere like.
-                  </p>
-                </div>
-              )}
+                {user ? (
+                  <div className="flex items-center gap-2">
+                    <Input
+                      ref={inputRef}
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                      placeholder="Aggiungi un commento…"
+                      className="h-10 bg-gray-50 border-gray-200 text-gray-800"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleSend}
+                      disabled={!newComment.trim() || sending}
+                      className="text-pink-500 hover:text-pink-700 disabled:opacity-30 transition-colors"
+                    >
+                      <Send className="size-6" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="rounded-xl bg-pink-50 border border-pink-100 px-4 py-4 text-center">
+                    <p className="text-sm text-gray-600">
+                      <a href="/login" className="text-pink-500 hover:underline font-semibold">Accedi</a> per lasciare un commento o mettere like.
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
