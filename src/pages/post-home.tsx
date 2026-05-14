@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Heart, MessageCircle, MapPin, Compass } from "lucide-react"
+import { Heart, MessageCircle, MapPin, Compass, X } from "lucide-react"
 import { Link } from "react-router"
 import { useQuery } from "@tanstack/react-query"
 import { useSearchParams } from "react-router"
@@ -12,7 +12,45 @@ import PostSingolo from "@/pages/post-singolo"
 import { LikesService } from "@/features/likes/likes.service"
 import { useAuthStore } from "@/features/auth/auth.store"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import type { SocialPost } from "@/features/posts/posts.type"
+import { createPortal } from "react-dom"
+
+const RegisterGateModal = ({ onClose }: { onClose: () => void }) =>
+  createPortal(
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm px-4"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-sm rounded-2xl bg-white shadow-2xl p-8 flex flex-col items-center gap-5 text-center"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 flex h-7 w-7 items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+        >
+          <X className="size-4 text-gray-500" />
+        </button>
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-pink-100">
+          <Compass className="size-7 text-pink-500" />
+        </div>
+        <div>
+          <h2 className="text-lg font-bold text-gray-800 mb-1">Unisciti alla community</h2>
+          <p className="text-sm text-gray-500">Per vedere e commentare i post registrati</p>
+        </div>
+        <div className="flex flex-col gap-2 w-full">
+          <Button className="w-full" render={<Link to="/register" />} nativeButton={false}>
+            Registrati
+          </Button>
+          <Button variant="outline" className="w-full" render={<Link to="/login" />} nativeButton={false}>
+            Accedi
+          </Button>
+        </div>
+      </div>
+    </div>,
+    document.body
+  )
 
 /* ─── Card ───────────────────────────────────────────────── */
 
@@ -23,6 +61,12 @@ const PostPage = ({ post }: { post: SocialPost }) => {
   const [likeCount, setLikeCount] = useState(post.likes)
   const [showComments, setShowComments] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
+  const [gateOpen, setGateOpen] = useState(false)
+
+  const handleCardClick = () => {
+    if (!user) { setGateOpen(true); return }
+    setModalOpen(true)
+  }
 
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -53,7 +97,7 @@ const PostPage = ({ post }: { post: SocialPost }) => {
     <>
       <article
         className="group flex flex-col overflow-hidden rounded-2xl bg-white/70 backdrop-blur-sm border border-white/60 shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer"
-        onClick={() => setModalOpen(true)}
+        onClick={handleCardClick}
       >
         {/* Image */}
         {post.img ? (
@@ -151,6 +195,8 @@ const PostPage = ({ post }: { post: SocialPost }) => {
           setLikeCount={setLikeCount}
         />
       )}
+
+      {gateOpen && <RegisterGateModal onClose={() => setGateOpen(false)} />}
     </>
   )
 }
