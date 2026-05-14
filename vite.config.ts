@@ -11,4 +11,24 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules/react") || id.includes("node_modules/react-dom") || id.includes("node_modules/react-router")) {
+            return "react"
+          }
+          if (id.includes("node_modules/@tanstack")) {
+            return "query"
+          }
+          if (id.includes("node_modules/lucide-react") || id.includes("node_modules/@icons-pack")) {
+            return "icons"
+          }
+          if (id.includes("node_modules")) {
+            return "vendor"
+          }
+        },
+      },
+    },
+  },
 })
