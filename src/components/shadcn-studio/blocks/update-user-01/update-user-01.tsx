@@ -26,7 +26,7 @@ const UpdateUserModal = ({ onClose }: Props) => {
   const fileRef = useRef<HTMLInputElement>(null)
 
   const initials = `${user?.firstName?.[0] ?? ""}${user?.lastName?.[0] ?? ""}`.toUpperCase()
-  const defaultAvatar = user?.avatarUrl || `https://api.dicebear.com/9.x/rings/svg?seed=${encodeURIComponent(user?.email ?? "")}`
+  const defaultAvatar = user?.avatarUrl ?? undefined
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose()

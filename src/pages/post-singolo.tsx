@@ -22,13 +22,10 @@ const CommentItem = ({ comment: c }: { comment: Comment }) => {
   const [likeId, setLikeId] = useState<number | null>(c.userLikeId)
   const [likeCount, setLikeCount] = useState(c.likes)
 
-  const dicebearSeed = `https://api.dicebear.com/9.x/rings/svg?seed=${encodeURIComponent(`${c.firstName}-${c.lastName}`)}`
   const isCurrentUser = user != null && (
     c.userId ? user.id === c.userId : user.firstName === c.firstName && user.lastName === c.lastName
   )
-  const avatarSrc = isCurrentUser
-    ? (user.avatarUrl || dicebearSeed)
-    : (c.avatarUrl || dicebearSeed)
+  const avatarSrc = isCurrentUser ? user.avatarUrl : c.avatarUrl
 
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -49,7 +46,7 @@ const CommentItem = ({ comment: c }: { comment: Comment }) => {
   return (
     <div className="flex gap-3 text-sm">
       <Avatar className="h-7 w-7 shrink-0">
-        <AvatarImage src={avatarSrc} />
+        <AvatarImage src={avatarSrc ?? undefined} />
         <AvatarFallback className="bg-pink-100 text-[10px] font-bold text-pink-600 uppercase">{c.firstName[0]}</AvatarFallback>
       </Avatar>
       <div className="flex-1 leading-snug pt-0.5">
@@ -315,7 +312,7 @@ const PostSingolo = ({
             {/* Author header — sempre visibile */}
             <div className="flex items-center gap-4 px-6 py-5 border-b border-gray-100 shrink-0">
               <Avatar className="h-12 w-12 shrink-0">
-                <AvatarImage src={post.author.avatarUrl || `https://api.dicebear.com/9.x/rings/svg?seed=${encodeURIComponent(post.author.email)}`} />
+                <AvatarImage src={post.author.avatarUrl ?? undefined} />
                 <AvatarFallback className="bg-pink-200 text-lg font-bold text-pink-700 uppercase">{initials}</AvatarFallback>
               </Avatar>
               <div className="leading-snug">

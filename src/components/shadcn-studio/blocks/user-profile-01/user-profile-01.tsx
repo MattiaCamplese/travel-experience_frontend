@@ -4,6 +4,7 @@ import { PostPage as PostCard } from "@/pages/post-home"
 import type { UserProfile as UserProfileData } from "@/features/users/users.type"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { UsersService } from "@/features/users/users.service"
+import { useAuthStore } from "@/features/auth/auth.store"
 import CreatePostModal from "@/components/shadcn-studio/blocks/create-post-01/create-post-01"
 
 /* ── Stat card ────────────────────────────────────────── */
@@ -35,6 +36,7 @@ const ProfileHeader = ({ profile, isOwner }: { profile: UserProfileData; isOwner
   })
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [avatarSrc, setAvatarSrc] = useState<string | null>(profile.avatarUrl)
+  const { updateUser } = useAuthStore()
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -44,6 +46,7 @@ const ProfileHeader = ({ profile, isOwner }: { profile: UserProfileData; isOwner
     try {
       const url = await UsersService.updateAvatar(profile.id, file)
       setAvatarSrc(url)
+      updateUser({ avatarUrl: url })
     } catch {
       setAvatarSrc(profile.avatarUrl)
     } finally {
@@ -56,7 +59,7 @@ const ProfileHeader = ({ profile, isOwner }: { profile: UserProfileData; isOwner
       {/* Avatar */}
       <div className="relative group">
         <Avatar className="h-28 w-28 shadow-lg ring-4 ring-white">
-          <AvatarImage src={avatarSrc ?? `https://api.dicebear.com/9.x/rings/svg?seed=${encodeURIComponent(profile.email)}`} />
+          <AvatarImage src={avatarSrc ?? undefined} />
           <AvatarFallback className="bg-pink-200 text-2xl font-bold text-pink-700">{initials}</AvatarFallback>
         </Avatar>
         {isOwner && (
