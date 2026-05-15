@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/Matti/Desktop/Clone/**)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\Matti\\Desktop\\Clone\\travel-experience_backend\\app\\Http\\Resources",
+      "c:\\Users\\Matti\\Desktop\\Clone\\travel-experience_backend\\app\\Http\\Controllers"
+    ]
+  }
+}
